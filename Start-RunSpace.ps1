@@ -20,7 +20,6 @@ function Start-RunSpace {
         $Runspace = [runspacefactory]::CreateRunspace($InitialSessionState)
         $Runspace.ApartmentState = "STA"
         $Runspace.ThreadOptions = "ReuseThread"
-        #$Runspace = [runspacefactory]::CreateRunspace($InitialSessionState)
         $Runspace.Open()
         $Runspace.SessionStateProxy.SetVariable("syncHash", $syncHash)
         $PowerShell = [powershell]::Create()
@@ -41,7 +40,7 @@ function Start-RunSpace {
             Unregister-Event $EventSubscriber.SourceIdentifier # Self remove event
             Remove-Job $EventSubscriber.SourceIdentifier # self remove Event Job
             $MyRunSpace = Get-Runspace -id $event.SourceArgs.id # Get current Runspace (Param : InputObject)
-            # If Runspace State is Closing or Busy, Dispose, Can't remove this runspace
+            # If Runspace State is Closing or Busy
             if (-Not ($Runspace.RunspaceStateInfo -eq "closing") -OR -Not ($runspace.RunspaceAvailability -eq "busy")) {
                 $MyRunSpace.Close() # Close $this runspace
                 $MyRunSpace.Dispose() # Dispose $this Runspace
